@@ -7,6 +7,13 @@ import json
 bot = commands.Bot(command_prefix=config_bot['prefix'])
 
 
+@bot.command(name='помощь')
+async def help_commands(ctx):
+    await ctx.send(
+        '**Команды**```py\n@ Oбщие:\n\'!паспорт\' - создает паспорт ,если он уже есть выводит данные пользователя\n\''
+        '!заказ <название>\' - заказ в баре\n@ Бармен:\n\'!принять <имя>\' - принять заказ```')
+
+
 @bot.command(name='паспорт')
 async def passport(ctx):
     data = open_db("database/passports.json")
@@ -63,13 +70,13 @@ async def drink_accept(ctx, user: discord.Member):
             update_db('database/bar.json', data_bar)
             await ctx.send('Заказ ' + client + 'оформлен(' + str(order2) + ')')
         else:
-            await ctx.send('У '+client+' не достаточно средств')
+            await ctx.send('У ' + client + ' не достаточно средств')
     else:
         await ctx.send('Пользователь ничего не заказывал (Стёпа - дэбил)')
 
 
 @drink_accept.error
-async def info_error(ctx, error):
+async def accept_error(ctx, error):
     if isinstance(error, commands.MissingRole):
         await ctx.send('Вы не бармен')
 
