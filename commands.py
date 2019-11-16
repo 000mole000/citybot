@@ -8,7 +8,7 @@ bot = commands.Bot(command_prefix=config_bot['prefix'])
 
 @bot.command(name='паспорт')
 async def passport(ctx):
-    data = open_db("passports.json")
+    data = open_db("database/passports.json")
     user = str(ctx.author)
     if user in data:
         money = data[user]["coin"]
@@ -17,7 +17,7 @@ async def passport(ctx):
         data[user] = {
             'coin': 0
         }
-        update_db("passports.json", data)
+        update_db("database/passports.json", data)
         await ctx.send(ctx.author.name + ' Получил паспорт')
 
 
