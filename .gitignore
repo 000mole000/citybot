@@ -1,4 +1,5 @@
 config.py
 venv
 .idea
-passports.json
+database/passports.json
+database/bar.json
