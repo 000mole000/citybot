@@ -3,3 +3,4 @@ venv
 .idea
 database/passports.json
 database/bar.json
+__pycache__

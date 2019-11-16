@@ -20,10 +20,15 @@ async def passport(ctx):
     user = str(ctx.author)
     if user in data:
         money = data[user]["coin"]
-        await ctx.send('Деньги: ' + str(money))
+        items = ''
+        for item in data[user]["items"]:
+            items = items + '```py\n@ '+item+'\n'+'```'
+        items = items if items != '' else '```py\n @ пусто```'
+        await ctx.send('**Инвентарь '+ctx.author.name+':**\n'+items+'\nДеньги: ' + str(money)+':pizza:')
     else:
         data[user] = {
-            'coin': 0
+            'coin': 0,
+            'item': []
         }
         update_db("database/passports.json", data)
         await ctx.send(ctx.author.name + ' Получил паспорт')
@@ -65,6 +70,7 @@ async def drink_accept(ctx, user: discord.Member):
         if data[client]["coin"] >= items["drinks"][str(order)]["cost"]:
             print(order)
             data[client]["coin"] -= items["drinks"][str(order)]["cost"]
+            data[client]["items"].append(str(order))
             update_db('database/passports.json', data)
             order2 = data_bar["order"].pop(client)
             update_db('database/bar.json', data_bar)
