@@ -1,3 +1,5 @@
+import asyncio
+
 import discord
 from discord.ext import commands
 from config import bot as config_bot
@@ -29,7 +31,8 @@ async def passport(ctx):
     else:
         data[user] = {
             'coin': 0,
-            'item': []
+            'item': [],
+            'work': False
         }
         update_db("database/passports.json", data)
         await ctx.send(ctx.author.name + ' Получил паспорт')
@@ -72,6 +75,7 @@ async def drink_accept(ctx, user: discord.Member):
             print(order)
             data[client]["coin"] -= items["drinks"][str(order)]["cost"]
             data[client]["items"].append(str(order))
+            data[str(ctx.author)]["coin"] += items["drinks"][str(order)]["cost"]
             update_db('database/passports.json', data)
             order2 = data_bar["order"].pop(client)
             update_db('database/bar.json', data_bar)
@@ -102,5 +106,23 @@ async def have_drink(ctx, drink):
         return
     await ctx.send("У вас нет такого предмета или его нельзя пить")
 
+
+@bot.command(name='работать')
+@commands.has_role("рабочий")
+async def drink_accept(ctx):
+    user = str(ctx.author)
+    data = open_db("database/passports.json")
+    salary = 10
+    if not data[user]["work"]:
+        data[user]["work"] = True
+        update_db("database/passports.json", data)
+        await ctx.send(ctx.author.name + ' начал работать')
+        await asyncio.sleep(5)
+        data[user]["coin"] += salary
+        await ctx.send(ctx.author.name + ' заработал ' + str(salary))
+        data[user]["work"] = False
+        update_db("database/passports.json", data)
+    else:
+        await ctx.send(ctx.author.name + ', ты уже работаешь')
 
 bot.run(config_bot['token'])
