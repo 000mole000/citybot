@@ -22,9 +22,9 @@ async def passport(ctx):
         money = data[user]["coin"]
         items = ''
         for item in data[user]["items"]:
-            items = items + '```py\n@ '+item+'\n'+'```'
+            items = items + '```py\n@ ' + item + '\n' + '```'
         items = items if items != '' else '```py\n @ пусто```'
-        await ctx.send('**Инвентарь '+ctx.author.name+':**\n'+items+'\nДеньги: ' + str(money)+':pizza:')
+        await ctx.send('**Инвентарь ' + ctx.author.name + ':**\n' + items + '\nДеньги: ' + str(money) + ':pizza:')
     else:
         data[user] = {
             'coin': 0,
@@ -85,6 +85,21 @@ async def drink_accept(ctx, user: discord.Member):
 async def accept_error(ctx, error):
     if isinstance(error, commands.MissingRole):
         await ctx.send('Вы не бармен')
+
+
+@bot.command(name='пить')
+async def have_drink(ctx, drink):
+    data = open_db("database/passports.json")
+    items = open_db("database/items.json")
+    drinks = items["drinks"]
+    user_name = str(ctx.author)
+    inventory = data[user_name]["items"]
+    if drink in drinks and drink in inventory:
+        inventory.remove(drink)
+        update_db("database/passports.json", data)
+        await ctx.send(ctx.author.name + ' выпил ' + drink)
+        return
+    await ctx.send("У вас нет такого предмета или его нельзя пить")
 
 
 bot.run(config_bot['token'])
