@@ -11,7 +11,8 @@ bot = commands.Bot(command_prefix=config_bot['prefix'])
 async def help_commands(ctx):
     await ctx.send(
         '**Команды**```py\n@ Oбщие:\n\'!паспорт\' - создает паспорт ,если он уже есть выводит данные пользователя\n\''
-        '!заказ <название>\' - заказ в баре\n@ Бармен:\n\'!принять <имя>\' - принять заказ```')
+        '!заказ <название>\' - заказ в баре\n\'!пить\' - выпить напиток\n'
+        '@ Бармен:\n\'!принять <имя>\' - принять заказ```')
 
 
 @bot.command(name='паспорт')
@@ -54,7 +55,7 @@ async def drink_order(ctx, drink):
     menu = ''
     for drink_menu in drinks:
         drink_menu_str = str(drink_menu)
-        menu = menu + drink_menu_str + ': ' + str(drinks[drink_menu_str]["cost"]) + '\n'
+        menu = menu + drink_menu_str + ': ' + str(drinks[drink_menu_str]["cost"]) + ':pizza:' + '\n'
     await ctx.send(ctx.author.name + ': \n' + menu)
 
 
